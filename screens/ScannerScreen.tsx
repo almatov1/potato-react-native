@@ -10,10 +10,12 @@ import { COLORS } from '../configs/template';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import mime from "mime";
 import { ROUTES } from '../configs/route';
-import { PLANTS_DATA } from '../configs/data';
+import { Plant, PLANTS_DATA } from '../configs/data';
 import { saveLabel } from '../utils/storage';
+import ModalComponent from '../components/ModalComponent';
 
 const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, any> }) => {
+    // DEFINE
     const [isLoading, setIsLoading] = useState(false);
     const camera = useRef<Camera>(null);
     const device = useCameraDevice('back');
@@ -25,6 +27,7 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
         checkPermissions();
     }, []);
 
+    // PICTURE
     const takePicture = async () => {
         if (camera.current && device) {
             try {
@@ -36,7 +39,6 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
             }
         }
     };
-
     const pickImage = async () => {
         await launchImageLibrary(
             {
@@ -59,8 +61,7 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
             },
         );
     };
-
-    const SERVER_URL = 'https://umemarket.kz/fastapi/predict';
+    const SERVER_URL = 'http://188.225.31.221:8000/predict';
     const handleImage = async (uri: string) => {
         setIsLoading(true);
         try {
@@ -78,8 +79,10 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
                 headers: { Accept: "application/json" }
             });
             if (!request.ok) {
-                Alert.alert('Сурет жүктелмеді');
+                setModalText('❌ Анықталмады');
+                setResultPlant(undefined);
                 setIsLoading(false);
+                showModal();
                 return;
             }
 
@@ -98,19 +101,36 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
                 const foundedPlant = PLANTS_DATA.find(item => item.label === bestLabel);
                 if (!foundedPlant) return;
                 await saveLabel(bestLabel);
-                navigation.navigate(ROUTES.RESULT, { plant: foundedPlant });
+                setModalText(bestLabel === 'potato' ? `Мәдени өсімдік (${(maxProbability * 100).toFixed(2)}%) ✅` : `Арамшөп (${(maxProbability * 100).toFixed(2)}%) ❌`);
+                setResultPlant(foundedPlant);
+                showModal();
             } else {
-                Alert.alert('Нәтижесі', 'Суреттегі объект анықталмады.');
+                setModalText('❌ Анықталмады');
+                setResultPlant(undefined);
+                showModal();
             }
 
             setIsLoading(false);
         } catch (error) {
-            console.error('Произошла ошибка:', error);
-            Alert.alert('Сурет жүктелмеді');
+            setModalText('❌ Анықталмады');
+            setResultPlant(undefined);
+            showModal();
             setIsLoading(false);
         }
     };
 
+    // MODAL
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [modalText, setModalText] = useState('');
+    const [resultPlant, setResultPlant] = useState<Plant | undefined>(undefined);
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+    const hideModal = () => {
+        setIsModalVisible(false);
+    };
+
+    // COMPONENT
     if (!device) {
         return <View style={styles.permissionContainer}><Text>Камера табылмады.</Text></View>;
     }
@@ -143,6 +163,17 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
             <ButtonComponent
                 onPress={takePicture}
                 title='Сканерлеу'
+            />
+            <ModalComponent
+                isVisible={isModalVisible}
+                onClose={hideModal}
+                title="🌱 Өсімдік түрі"
+                message={modalText}
+                buttonText={resultPlant ? "Толығырақ" : "Құптау"}
+                onButtonPress={() => {
+                    if (resultPlant) navigation.navigate(ROUTES.RESULT, { plant: resultPlant });
+                    hideModal();
+                }}
             />
         </SafeAreaView>
     );

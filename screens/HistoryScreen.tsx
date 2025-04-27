@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../configs/template';
-import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Plant, PLANTS_DATA } from '../configs/data';
 import { ROUTES } from '../configs/route';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -67,22 +67,26 @@ const HistoryScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="arrow-back-outline" size={30} color={COLORS.GREEN} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={async () => {
-                    await clearLabels();
-                    navigation.replace(ROUTES.HISTORY);
-                }}>
-                    <Icon name="trash-outline" size={30} color={COLORS.GREEN} />
-                </TouchableOpacity>
-            </View>
-            {history.length === 0 ? (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 20 }}>Мұрағатта жазбалар табылмады.</Text>
+            <ScrollView contentContainerStyle={{
+                rowGap: 24
+            }}>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Icon name="arrow-back-outline" size={30} color={COLORS.GREEN} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={async () => {
+                        await clearLabels();
+                        navigation.replace(ROUTES.HISTORY);
+                    }}>
+                        <Icon name="trash-outline" size={30} color={COLORS.GREEN} />
+                    </TouchableOpacity>
                 </View>
-            ) : (history.map((item) => renderItem({ item })))}
+                {history.length === 0 ? (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 20 }}>Мұрағатта жазбалар табылмады.</Text>
+                    </View>
+                ) : (history.map((item) => renderItem({ item })))}
+            </ScrollView>
         </SafeAreaView>
     );
 };
@@ -96,8 +100,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 24,
-        gap: 24
+        padding: 24
     }
 });
 
