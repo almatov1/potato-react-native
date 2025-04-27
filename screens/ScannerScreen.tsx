@@ -61,7 +61,7 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
             },
         );
     };
-    const SERVER_URL = 'http://188.225.31.221:8000/predict';
+    const SERVER_URL = 'https://umemarket.kz/fastapi/predict';
     const handleImage = async (uri: string) => {
         setIsLoading(true);
         try {
