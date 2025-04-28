@@ -31,7 +31,7 @@ const ResultScreen: React.FC<{ route: ResultScreenRouteProp }> = ({ route }) => 
           imageStyle={{ resizeMode: 'cover', borderRadius: 24 }}
         />
         <Text style={{ fontSize: 24, fontWeight: 600, color: COLORS.GREEN }}>{plant.name}</Text>
-        <Text style={{ fontSize: 14, color: COLORS.GREEN }}>{plant.description}</Text>
+        <Text style={{ fontSize: 16, color: COLORS.GREEN }}>{plant.description}</Text>
       </ScrollView>
     </SafeAreaView>
   );

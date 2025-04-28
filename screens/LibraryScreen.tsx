@@ -27,11 +27,11 @@ const LibraryScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
                             }}
                             imageStyle={{ resizeMode: 'cover', borderRadius: 16 }}
                         />
-                        <View>
+                        <View style={{ flex: 1 }}>
                             <Text style={{ color: COLORS.GREEN, fontSize: 20, fontWeight: 600 }}>{plant.name}</Text>
                             <Text style={{ color: COLORS.GREEN, fontSize: 14 }}>
-                                {plant.description.length > 200
-                                    ? `${plant.description.slice(0, 150)}...`
+                                {plant.description.length > 120
+                                    ? `${plant.description.slice(0, 120)}...`
                                     : plant.description}
                             </Text>
                         </View>
