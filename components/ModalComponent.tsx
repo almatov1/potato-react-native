@@ -30,11 +30,11 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 700,
-        textAlign: 'center',
+        textAlign: 'left',
     },
     message: {
-        fontSize: 16,
-        textAlign: 'center',
+        fontSize: 20,
+        textAlign: 'left',
     }
 });
 

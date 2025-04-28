@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, Text, TouchableHighlight } from 'react-native';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../configs/template';
@@ -32,14 +32,26 @@ const MainScreen = ({ navigation }: { navigation: StackNavigationProp<any, any> 
                     flexDirection: 'row',
                     gap: 24
                 }}>
-                    <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate(ROUTES.HISTORY)}>
-                        <Icon name="folder-open-outline" size={30} color={COLORS.GREEN} />
-                        <Text>Мұрағат</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate(ROUTES.LIBRARY)}>
-                        <Icon name="book-outline" size={30} color={COLORS.GREEN} />
-                        <Text>Анықтамалық</Text>
-                    </TouchableOpacity>
+                    <TouchableHighlight
+                        onPress={() => navigation.navigate(ROUTES.HISTORY)}
+                        underlayColor={COLORS.WHITE_DARK}
+                        style={styles.tab}
+                    >
+                        <View style={styles.tabItem}>
+                            <Icon name="folder-open-outline" size={30} color={COLORS.GREEN} />
+                            <Text>Мұрағат</Text>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                        onPress={() => navigation.navigate(ROUTES.LIBRARY)}
+                        underlayColor={COLORS.WHITE_DARK}
+                        style={styles.tab}
+                    >
+                        <View style={styles.tabItem}>
+                            <Icon name="book-outline" size={30} color={COLORS.GREEN} />
+                            <Text>Анықтамалық</Text>
+                        </View>
+                    </TouchableHighlight>
                 </View>
             </View>
         </SafeAreaView>
@@ -51,15 +63,18 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 24,
+        paddingHorizontal: 24,
+        paddingVertical: 56
     },
     tab: {
         flex: 1,
         backgroundColor: COLORS.WHITE,
         padding: 16,
+        borderRadius: 24
+    },
+    tabItem: {
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 24,
         gap: 10
     }
 });

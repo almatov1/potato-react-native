@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, ScrollView } from 'react-native';
+import { Text, StyleSheet, ImageBackground, ScrollView } from 'react-native';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { Plant } from '../configs/data';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS } from '../configs/template';
 import { StackNavigationProp } from '@react-navigation/stack';
+import HeaderComponent from '../components/HeaderComponent';
 
 type RootStackParamList = {
   ResultScreen: { plant: Plant };
@@ -18,14 +18,10 @@ const ResultScreen: React.FC<{ route: ResultScreenRouteProp }> = ({ route }) => 
 
   return (
     <SafeAreaView style={styles.container}>
+      <HeaderComponent navigation={navigation} />
       <ScrollView contentContainerStyle={{
         rowGap: 24
       }}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back-outline" size={30} color={COLORS.GREEN} />
-          </TouchableOpacity>
-        </View>
         <ImageBackground
           source={plant.image}
           style={{
@@ -42,17 +38,12 @@ const ResultScreen: React.FC<{ route: ResultScreenRouteProp }> = ({ route }) => 
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%'
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24
+    padding: 24,
+    gap: 24
   }
 });
 

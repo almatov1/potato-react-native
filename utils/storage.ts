@@ -18,7 +18,7 @@ export const saveLabel = async (label: string): Promise<void> => {
 
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(history));
     } catch (error) {
-        console.error('Ошибка при сохранении label:', error);
+        console.error('Labels сақтау кезінде қате:', error);
     }
 };
 
@@ -27,7 +27,7 @@ export const getLabels = async (): Promise<HistoryItem[]> => {
         const existing = await AsyncStorage.getItem(STORAGE_KEY);
         return existing ? JSON.parse(existing) : [];
     } catch (error) {
-        console.error('Ошибка при получении labels:', error);
+        console.error('Labels алу кезінде қате:', error);
         return [];
     }
 };
@@ -36,6 +36,6 @@ export const clearLabels = async (): Promise<void> => {
     try {
         await AsyncStorage.removeItem(STORAGE_KEY);
     } catch (error) {
-        console.error('Ошибка при очистке labels:', error);
+        console.error('Labels тазалау қатесі:', error);
     }
 };

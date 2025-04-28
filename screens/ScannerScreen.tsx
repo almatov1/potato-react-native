@@ -13,6 +13,7 @@ import { ROUTES } from '../configs/route';
 import { Plant, PLANTS_DATA } from '../configs/data';
 import { saveLabel } from '../utils/storage';
 import ModalComponent from '../components/ModalComponent';
+import HeaderComponent from '../components/HeaderComponent';
 
 const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, any> }) => {
     // DEFINE
@@ -35,7 +36,7 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
                 const uri = `file://${photo.path}`;
                 await handleImage(uri);
             } catch (error) {
-                console.error('Ошибка при съемке фото:', error);
+                console.error('Суретке түсіру кезінде қате орындалды', error);
             }
         }
     };
@@ -48,7 +49,7 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
             },
             async (response) => {
                 if (response.didCancel) {
-                    console.log('User cancelled image picker');
+                    console.log('ImagePicker Error');
                 } else if (response.errorCode) {
                     console.log('ImagePicker Error: ', response.errorMessage);
                 } else {
@@ -79,7 +80,7 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
                 headers: { Accept: "application/json" }
             });
             if (!request.ok) {
-                setModalText('❌ Анықталмады');
+                setModalText('Нысан анықталмады. Басқа сурет таңдаңыз!');
                 setResultPlant(undefined);
                 setIsLoading(false);
                 showModal();
@@ -101,18 +102,18 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
                 const foundedPlant = PLANTS_DATA.find(item => item.label === bestLabel);
                 if (!foundedPlant) return;
                 await saveLabel(bestLabel);
-                setModalText(bestLabel === 'potato' ? `Мәдени өсімдік (${(maxProbability * 100).toFixed(2)}%) ✅` : `Арамшөп (${(maxProbability * 100).toFixed(2)}%) ❌`);
+                setModalText(bestLabel === 'potato' ? `Нысан анықталды! Мәдени өсімдік (${(maxProbability * 100).toFixed(2)}%) ✅` : `Нысан анықталды! Арамшөп (${(maxProbability * 100).toFixed(2)}%) ❌`);
                 setResultPlant(foundedPlant);
                 showModal();
             } else {
-                setModalText('❌ Анықталмады');
+                setModalText('Нысан анықталмады. Басқа сурет таңдаңыз!');
                 setResultPlant(undefined);
                 showModal();
             }
 
             setIsLoading(false);
         } catch (error) {
-            setModalText('❌ Анықталмады');
+            setModalText('Нысан анықталмады. Басқа сурет таңдаңыз!');
             setResultPlant(undefined);
             showModal();
             setIsLoading(false);
@@ -142,14 +143,11 @@ const ScannerScreen = ({ navigation }: { navigation: StackNavigationProp<any, an
                     <Text style={styles.loadingText}>Жүктелуде...</Text>
                 </View>
             )}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="arrow-back-outline" size={30} color={COLORS.GREEN} />
-                </TouchableOpacity>
+            <HeaderComponent navigation={navigation}>
                 <TouchableOpacity onPress={pickImage}>
                     <Icon name="cloud-upload" size={30} color={COLORS.GREEN} />
                 </TouchableOpacity>
-            </View>
+            </HeaderComponent>
             <View style={styles.cameraContainer}>
                 <Camera
                     ref={camera}
@@ -186,12 +184,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 24,
         gap: 24
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%'
     },
     cameraContainer: {
         flex: 1,

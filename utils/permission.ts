@@ -4,10 +4,10 @@ export const requestCameraPermission = async (): Promise<boolean> => {
     if (Platform.OS === 'android') {
         try {
             const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
-                title: 'Разрешение на использование камеры',
-                message: 'Приложению требуется разрешение на использование камеры',
+                title: 'Камераны пайдалануға рұқсат',
+                message: 'Қолданбаға камераны пайдалануға рұқсат қажет',
                 buttonPositive: 'ОК',
-                buttonNegative: 'Отмена',
+                buttonNegative: 'Бас тарту',
             });
             return granted === PermissionsAndroid.RESULTS.GRANTED;
         } catch (err) {
